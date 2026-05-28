@@ -149,6 +149,7 @@ def select_parents_inbreeding(population, num_pairs):
         pairs.append((copy_individual(population[best_pair[0]]),
                       copy_individual(population[best_pair[1]])))
         available.remove(best_pair[0])   # исключаем использованную особь
+        available.remove(best_pair[1])
 
     return pairs
 
@@ -243,8 +244,8 @@ def mutate_translocation(individual):
     if random.random() > MUTATION_PROB:
         return
 
-    i, j = sorted([random.randint(0, CHROMOSOME_LENGTH),
-                   random.randint(0, CHROMOSOME_LENGTH)])
+    i, j = sorted([random.randint(0, CHROMOSOME_LENGTH - 1),
+                   random.randint(0, CHROMOSOME_LENGTH - 1)])
     if i == j:
         return
 
@@ -459,7 +460,7 @@ def main():
         # Пропорциональный отбор на (POPULATION_SIZE − 1) мест;
         # последнее место гарантированно занимает лучшая особь (элитизм)
         new_population = selection_proportional(pool, POPULATION_SIZE - 1)
-        new_population.append(best_in_pool)
+        new_population.append(copy_individual(best_in_pool))
         population = new_population
 
         # Сохраняем лучшее значение текущего поколения для графика
